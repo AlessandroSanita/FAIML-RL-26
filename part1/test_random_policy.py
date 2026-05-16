@@ -17,20 +17,37 @@ def main():
         env = gym.make('Hopper-v4', render_mode='human')
     else:
         env = gym.make('Hopper-v4', render_mode='rgb_array')
-    print('State space:', env.observation_space)  # state-space
-    print('Action space:', env.action_space)  # action-space
+    # print('State space:', env.observation_space)  # state-space
+    # print('Action space:', env.action_space)  # action-space
 
-    n_episodes = 50
+    n_episodes = 5
 
     for ep in range(n_episodes):  
         done = False
         state, info = env.reset()  # Reset environment to initial state
+        
+        step = 0
+
+        print("================================================================")
 
         while not done:  # Until the episode is over
             action = env.action_space.sample()  # Sample random action
 
             state, reward, terminated, truncated, _ = env.step(action)  # Step the simulator to the next timestep
+            
+            
+            if step%5 == 0:
+                print(f"\n\nSummary at step {step} from episode: {ep}")
+                print("Current state:")
+                print(state)
+                print("\nAction selected")
+                print(action)
+                print("\nReward")
+                print(reward)
+
             done = terminated or truncated
+
+            step+=1
 
             if render:
                 env.render()
