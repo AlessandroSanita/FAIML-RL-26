@@ -17,8 +17,20 @@ def main():
         env = gym.make('Hopper-v4', render_mode='human')
     else:
         env = gym.make('Hopper-v4', render_mode='rgb_array')
+    
     # print('State space:', env.observation_space)  # state-space
     # print('Action space:', env.action_space)  # action-space
+
+
+    print("State of the robot")
+    print(f"body_names: {env.unwrapped.get_wrapper_attr("mass")}")
+    print(f"body_names: {env.unwrapped.sim.model.body_names}")
+    print(f"body_mass: {env.sim.model.body_mass}")
+    print(f"nv: {env.sim.model.nv}")
+    print(f"body_dofnum: {env.sim.model.body_dofnum}")
+    print(f"nu: {env.sim.model.nu}")
+
+
 
     n_episodes = 5
 
