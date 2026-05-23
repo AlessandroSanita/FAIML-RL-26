@@ -2,13 +2,23 @@
 
     Here you will implement the training loop for REINFORCE and Actor-Critic
 """
+# from random import random, seed
+import random
 import gymnasium as gym
 import torch
 from agent import Policy, Agent
 
 def main():
-    env = gym.make('Hopper-v4')
+    
+    
+    seed = 7
+    random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
+    env = gym.make('Hopper-v4')
+    env.reset(seed=seed)
     # print('State space:', env.observation_space)  # state-space
     # print('Action space:', env.action_space)  # action-space
     # print('-------------------\n\n')
