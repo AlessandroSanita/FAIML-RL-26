@@ -78,11 +78,11 @@ class Policy(torch.nn.Module):
 
 class Agent(object):
     """ policy = ANN """
-    def __init__(self, policy, device='cpu'):
+    def __init__(self, policy, device='cpu', baseline = 20):
         self.train_device = device
         self.policy = policy.to(self.train_device)
         self.optimizer = torch.optim.Adam(policy.parameters(), lr=1e-3)
-
+        self.baseline = baseline
         self.gamma = 0.99
         self.states = []
         self.next_states = []
@@ -104,10 +104,10 @@ class Agent(object):
         #               TASK 2:
         # ====================================
         #   - compute discounted returns
-        G_t = discount_rewards(rewards)
+        G_t = discount_rewards(rewards, self.gamma)
 
         #   - compute policy gradient loss function given actions and returns
-        loss = - ((G_t - baseline) * action_log_probs).mean() 
+        loss = - ((G_t - self.baseline) * action_log_probs).mean() 
 
         #   - compute gradients and step the optimizer
         self.optimizer.zero_grad()
