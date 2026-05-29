@@ -81,7 +81,7 @@ def main():
 
     time_start = time.time()
 
-    (rewards, time_taken, time_update) = train_model(num_episodes=50)
+    (rewards, time_taken, time_update) = train_model(num_episodes=50000)
 
     time_end = time.time()
 
