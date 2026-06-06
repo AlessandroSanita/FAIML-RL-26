@@ -3,6 +3,7 @@ __pycache__/
 *$py.class
 *.pyc
 *.csv
+*.pt
 
 # Jupyter Notebook
 .ipynb_checkpoints

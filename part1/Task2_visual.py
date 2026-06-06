@@ -5,6 +5,7 @@
 # from random import random, seed
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import time 
 import random
 import gymnasium as gym
@@ -12,7 +13,7 @@ import torch
 from agent import Policy, Agent
 
 def train_model(baseline=0, num_episodes=5000):
-    seed = 7
+    seed = 10
     random.seed(seed)
     torch.manual_seed(seed)
     if torch.cuda.is_available():
@@ -29,6 +30,8 @@ def train_model(baseline=0, num_episodes=5000):
 
     policy = Policy(state_space=env.observation_space.shape[0], action_space=env.action_space.shape[0])
     agent = Agent(policy=policy, device=device, baseline=baseline)
+
+    best_reward = float('-inf')
 
     final_rewards = []
     time_taken = []
@@ -56,6 +59,13 @@ def train_model(baseline=0, num_episodes=5000):
         time_taken.append(end_time - start_time)
         final_rewards.append(reward)
 
+        avg_reward = np.mean(final_rewards[-100:])
+
+        if avg_reward > best_reward:
+            best_reward = avg_reward
+            print(f"\nEpisode {episode+1} has been completed with new best reward: {avg_reward}")
+            torch.save(policy.state_dict(), f'part1\\Results\\best_model_baseline_{baseline}.pt')
+
         start_time = time.time()
 
         agent.update_policy()
@@ -80,7 +90,7 @@ def main():
     rewards = {}
     time_taken = {}
     time_update = {}
-    baselines = [0, 20]
+    baselines = [0, 15, 20, 50]
 
     for baseline in baselines:
         print(f"\n\nTraining with baseline: {baseline}")
@@ -88,7 +98,6 @@ def main():
 
 
     pd.DataFrame(rewards).to_csv('part1\\Results\\Task2_rewards.csv', index=False)
-
     pd.DataFrame(time_taken).to_csv('part1\\Results\\Task2_time_taken.csv', index=False)
     pd.DataFrame(time_update).to_csv('part1\\Results\\Task2_time_update.csv', index=False)
 

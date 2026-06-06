@@ -5,6 +5,7 @@
 # from random import random, seed
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import time 
 import random
 import gymnasium as gym
@@ -32,6 +33,8 @@ def train_model(num_episodes=5000):
     policy = Policy(state_space=env.observation_space.shape[0], action_space=env.action_space.shape[0], mode=mode)
     agent = Agent(policy=policy, mode=mode, device=device, baseline=20)
 
+    best_reward = float('-inf')
+
     final_rewards = []
     time_taken = []
     time_update = []
@@ -56,6 +59,12 @@ def train_model(num_episodes=5000):
 
         final_rewards.append(reward)
         time_taken.append(end_time - start_time)
+        avg_reward = np.mean(final_rewards[-100:])
+
+        if avg_reward > best_reward:
+            best_reward = avg_reward
+            print(f"\nEpisode {episode+1} has been completed with new best reward: {avg_reward}")
+            torch.save(policy.state_dict(), f'part1\\Results\\best_model_actor-critic.pt')
 
 
         start_time = time.time()
